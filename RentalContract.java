@@ -12,11 +12,20 @@ public class RentalContract {
     public RentalContract(int contractID, Property property, Tenant tenant,
                           LocalDate startDate, LocalDate endDate) {
         // Validate before changing any state
-        if (!property.isAvailable()) {
-            throw new IllegalStateException("Property is not available");
+        if (contractID <= 0) {
+            throw new IllegalArgumentException("Contract ID must be positive");
+        }
+        if (property == null || tenant == null) {
+            throw new IllegalArgumentException("Property and tenant are required");
+        }
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Start date and end date are required");
         }
         if (!endDate.isAfter(startDate)) {
             throw new IllegalArgumentException("End date must be later than start date");
+        }
+        if (!property.isAvailable()) {
+            throw new IllegalStateException("Property is not available");
         }
         this.contractID = contractID;
         this.property = property;
