@@ -1,4 +1,4 @@
-name: Java Validation Tests
+name: Java MVC and Validation Tests
 
 on:
   push:
@@ -15,9 +15,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Compile
-        run: javac *.java
-      - name: Run validation tests
-        run: java ValidationTests
-      - name: Run example program
-        run: java Main
+      - name: Compile application and tests
+        run: javac -d out model/*.java controller/*.java view/*.java *.java
+      - name: Run model validation regression tests
+        run: java -cp out ValidationTests
+      - name: Run MVC integration tests
+        run: java -cp out MvcIntegrationTests
+      - name: Verify application starts
+        run: printf '4\n' | java -cp out Main

@@ -1,32 +1,32 @@
 # Rental Management App - Team H
 
-## Project Week 3 - Reliable Engineering
+## Project Week 4 - Model-View-Controller Architecture
 
-This Java application contains five core classes: `User`, `PropertyOwner`,
-`Property`, `Tenant`, and `RentalContract`. Week 3 adds input validation while
-keeping existing data unchanged when an operation fails.
+The application is refactored into a simple MVC structure while preserving the five existing domain classes and their Week 3 validation rules.
 
-Validation uses regular expressions for names and email, numeric checks for IDs
-and rental rates, and `LocalDate` comparisons for contract dates. Java's typed
-`double` parameters prevent callers from passing strings or booleans as rental
-rates. Validation failures throw exceptions before objects or lists are changed.
+### Architecture
+
+- **Model** (`model/`): `User`, `PropertyOwner`, `Property`, `Tenant`, and `RentalContract`. These classes hold application data and business rules. They do not read console input or print menus.
+- **Controller** (`controller/RentalController.java`): exposes `createProperty`, `rentProperty`, and `terminateContract`. It delegates to the existing model methods instead of duplicating validation.
+- **View** (`view/ConsoleView.java`): displays the menu, reads user input, calls controller methods, and displays success or error messages. It does not directly create contracts or change availability.
+- **Entry point** (`Main.java`): creates the model objects, controller, and view, then launches the menu.
+
+Expected request flow: User -> ConsoleView -> RentalController -> Model. The result returns through the controller to the view.
 
 ### Run locally (Java 17+)
 
 ```bash
-javac *.java
-java ValidationTests
-java Main
+javac -d out model/*.java controller/*.java view/*.java *.java
+java -cp out ValidationTests
+java -cp out MvcIntegrationTests
+java -cp out Main
 ```
 
-The automated GitHub Actions workflow runs the validation checks and example
-program on pull requests into `main` and pushes to `main`.
+### Demonstrated behavior
 
-### Week 3 checklist
+- Create a property: availability is `true`.
+- Rent the property: availability becomes `false`.
+- Terminate the contract: availability returns to `true`.
+- Invalid rental rates, invalid dates, and renting an unavailable property are rejected by the Model. The View displays the error and continues running without corrupting stored state.
 
-- [x] Week 2 classes merged into `main`
-- [x] New feature branch created from updated `main`
-- [x] Input validation and regression checks added
-- [x] Automated checks configured for pull requests
-- [ ] Pull request reviewed and merged into `main`
-- [ ] Kanban board updated to reflect the merged work
+GitHub Actions compiles the application and runs both validation and MVC integration tests on pushes and pull requests targeting `main`.

@@ -1,4 +1,9 @@
 import java.time.LocalDate;
+import model.User;
+import model.Property;
+import model.PropertyOwner;
+import model.Tenant;
+import model.RentalContract;
 
 public class ValidationTests {
     private static int passed = 0;
